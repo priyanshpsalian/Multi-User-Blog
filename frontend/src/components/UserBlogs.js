@@ -6,21 +6,21 @@ const UserBlogs = () => {
   const id = localStorage.getItem("userId");
   const sendRequest = async () => {
     const res = await axios
-      .get(`http://localhost:5000/api/blog/user/${id}`)
+      .get(`http://localhost:5000/blog/getBlogById/${id}`)
       .catch((err) => console.log(err));
     const data = await res.data;
     return data;
   };
   useEffect(() => {
-    sendRequest().then((data) => setUser(data.user));
+    sendRequest().then((data) => setUser(data));
   }, []);
-  console.log(user);
+  // console.log(user);
   return (
     <div>
       {" "}
       {user &&
-        user.blogs &&
-        user.blogs.map((blog, index) => (
+        user &&
+        user.map((blog, index) => (
           <Blog
             id={blog._id}
             key={index}

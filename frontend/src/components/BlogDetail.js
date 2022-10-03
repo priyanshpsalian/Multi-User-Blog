@@ -9,7 +9,7 @@ const BlogDetail = () => {
   const navigate = useNavigate();
   const [blog, setBlog] = useState();
   const id = useParams().id;
-  console.log(id);
+  // console.log(id,"iddddd");
   const [inputs, setInputs] = useState({});
   const handleChange = (e) => {
     setInputs((prevState) => ({
@@ -19,23 +19,24 @@ const BlogDetail = () => {
   };
   const fetchDetails = async () => {
     const res = await axios
-      .get(`http://localhost:5000/api/blog/${id}`)
+      .get(`http://localhost:5000/blog/getToEditBlogById/${id}`)
       .catch((err) => console.log(err));
     const data = await res.data;
+    console.log(data,"blog details");
     return data;
   };
   useEffect(() => {
     fetchDetails().then((data) => {
-      setBlog(data.blog);
+      setBlog(data);
       setInputs({
-        title: data.blog.title,
-        description: data.blog.description,
+        title: data.title,
+        description: data.description,
       });
     });
   }, [id]);
   const sendRequest = async () => {
     const res = await axios
-      .put(`http://localhost:5000/api/blog/update/${id}`, {
+      .put(`http://localhost:5000/blog/updateBlog/${id}`, {
         title: inputs.title,
         description: inputs.description,
       })

@@ -18,19 +18,28 @@ const Blog = ({ title, description, imageURL, userName, isUser, id }) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const handleEdit = () => {
+    console.log(id);
     navigate(`/myBlogs/${id}`);
   };
   const deleteRequest = async () => {
     const res = await axios
-      .delete(`http://localhost:5000/api/blog/${id}`)
+      .delete(`http://localhost:5000/blog/deleteBlogById/${id}`)
       .catch((err) => console.log(err));
     const data = await res.data;
     return data;
   };
-  const handleDelete = () => {
-    deleteRequest()
-      .then(() => navigate("/"))
-      .then(() => navigate("/blogs"));
+  const handleDelete = async () => {
+    console.log("jjj");
+    // deleteRequest()
+    const res = await axios
+      .delete(`http://localhost:5000/blog/deleteBlogById/${id}`)
+      .catch((err) => console.log(err));
+    const data = await res.data;
+    // return data;
+      // .then(() => navigate("/"))
+      // .then(() => navigate("/blogs"));
+      navigate("/blogs");
+      console.log("hh");
   };
   return (
     <div>

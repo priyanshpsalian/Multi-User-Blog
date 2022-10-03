@@ -1,4 +1,5 @@
 const express = require("express");
+var ObjectId = require("mongodb").ObjectId;
 const router = express.Router();
 require("../../db/conn");
 const blog_model = require("../../models/blog");
@@ -67,7 +68,25 @@ router.get("/getBlogById/:id", async (req, res) => {
     let blogId = req.params.id;
     // const { title, description } = req.body;
     // console.log("L");
+    // const update = await blog_model.findById(blogId);
+    const update = await blog_model.find({"user":ObjectId(`${blogId}`)});
+
+    // console.log("KKK");
+    res.status(201).send(update);
+  } catch (e) {
+    console.log(e);
+  }
+});
+router.get("/getToEditBlogById/:id", async (req, res) => {
+  try {
+    // console.log("K");
+    let blogId = req.params.id;
+    // const { title, description } = req.body;
+    // console.log("L");
     const update = await blog_model.findById(blogId);
+    // const update = await blog_model.find({ user: ObjectId(`${blogId}`) });
+
+    // console.log("KKK");
     res.status(201).send(update);
   } catch (e) {
     console.log(e);
@@ -77,20 +96,31 @@ router.delete("/deleteBlogById/:id", async (req, res) => {
   try {
     // console.log("K");
     let blogId = req.params.id;
+    // console.log(blogId);
     // const { title, description } = req.body;
     // console.log("L");
     try {
-      const update = await blog_model
-        .findByIdAndRemove(blogId)
-        // .populate("register");
-      console.log(update.user);
-      await update.user.blogs.pull(update);
-    //   await update.user.save();
+      // const update = await blog_model
+      //   .findByIdAndRemove(blogId)
+      // .populate("register");
+
+      var update = await blog_model.findByIdAndRemove(blogId);
+      update = ObjectId(blogId);
+      // console.log(update);
+      // console.log(update.user);
+      // console.log(user_model);
+      const ans=await user_model.updateMany({}, 
+        {$pull: {blogs: update}}, 
+        // {multi: true}
+      );
+      // console.log(ans);
+      // await user_model.save();
+     res.status(201).send(update);
     } catch (e) {
       console.log(e);
     }
 
-    res.status(201).send(update);
+    // res.status(201).send(update);
   } catch (e) {
     console.log(e);
   }

@@ -20,17 +20,17 @@ const Auth = () => {
       [e.target.name]: e.target.value,
     }));
   };
-  const sendRequest = async (type = "login") => {
+  const sendRequest = async (type = "UserLogin") => {
     const res = await axios
-      .post(`http://localhost:5000/api/user/${type}`, {
+      .post(`http://localhost:5000/user/${type}`, {
         name: inputs.name,
         email: inputs.email,
         password: inputs.password,
       })
       .catch((err) => console.log(err));
-
+      // console.log(res);
     const data = await res.data;
-    console.log(data);
+    console.log(data,"LL");
     return data;
   };
 
@@ -39,12 +39,12 @@ const Auth = () => {
     console.log(inputs);
     if (isSignup) {
       sendRequest("signup")
-        .then((data) => localStorage.setItem("userId", data.user._id))
+        .then((data) => localStorage.setItem("userId", data._id))
         .then(() => dispath(authActions.login()))
         .then(() => naviagte("/blogs"));
     } else {
       sendRequest()
-        .then((data) => localStorage.setItem("userId", data.user._id))
+        .then((data) => localStorage.setItem("userId", data._id))
         .then(() => dispath(authActions.login()))
         .then(() => naviagte("/blogs"));
     }
